@@ -1,0 +1,2 @@
+from Actividades.Dipolo.Dipolo_Electrico import Dipolo_Electrico
+from Actividades.Placas_Cargadas.Placas_Cargadas import Placas_Cargadas

@@ -1,6 +1,10 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+
+# Ruta de la carpeta donde está el script
+carpeta = os.path.dirname(__file__)
 
 # Parámetros físicos
 k = 9e9
@@ -59,6 +63,5 @@ ax.set_ylabel(r'$y$ (m)', fontsize=14)
 ax.legend(fontsize=11)
 
 plt.tight_layout()
-plt.savefig('campo_electrico_dipolo.pdf', format='pdf', bbox_inches='tight')
-plt.savefig('campo_electrico_dipolo.png', dpi=150, bbox_inches='tight')
+plt.savefig(os.path.join(carpeta, 'campo_electrico_dipolo.png'), dpi=150, bbox_inches='tight')
 plt.show()

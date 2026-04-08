@@ -1,7 +1,11 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+# Ruta de la carpeta donde está el script
+carpeta = os.path.dirname(__file__)
 
 # ── Parámetros físicos ────────────────────────────────────────────────────
 k  = 9e9          # constante de Coulomb (k=1 para simplificar como la prof sugiere)
@@ -134,7 +138,6 @@ ax.set_title('Campo eléctrico: arreglo de cargas en dos placas',
 ax.grid(True, linestyle='--', alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('campo_placas_paralelas.pdf', format='pdf', bbox_inches='tight')
-plt.savefig('campo_placas_paralelas.png', dpi=150, bbox_inches='tight')
+plt.savefig(os.path.join(carpeta, 'campo_placas_paralelas.png'), dpi=150, bbox_inches='tight')
 plt.show()
-print("Listo: campo_placas_paralelas.pdf / .png")
+print("Listo: campo_placas_paralelas.png")
