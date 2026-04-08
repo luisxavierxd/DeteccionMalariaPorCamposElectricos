@@ -51,7 +51,7 @@ $$\vec{F}_{DEP} \propto \nabla|\vec{E}|^2$$
 
 ```bash
 git clone https://github.com/luisxavierxd/CamposElectricosMalaria
-cd tu-repo
+cd CamposElectricosMalaria
 python -m venv venv
 venv\Scripts\activate        # Windows
 pip install numpy matplotlib
