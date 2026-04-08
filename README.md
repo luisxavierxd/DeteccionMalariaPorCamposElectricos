@@ -1,10 +1,10 @@
-# ⚡ Visualización de Campos Eléctricos — Detección de Malaria
+# Visualización de Campos Eléctricos — Detección de Malaria
 
 Simulaciones y visualizaciones de campos eléctricos en Python/Matplotlib, desarrolladas como parte de un reto de física aplicada. El objetivo final es modelar el principio de **dielectroforesis** para la detección de malaria en glóbulos rojos infectados.
 
 ---
 
-## 🎯 Propósito
+## Propósito
 
 Los glóbulos rojos infectados con malaria (*Plasmodium falciparum*) tienen propiedades dieléctricas distintas a los sanos. Al exponerlos a un **campo eléctrico no uniforme**, experimentan fuerzas dielectroforéticas diferentes, lo que permite separarlos y detectar la infección sin métodos invasivos.
 
@@ -12,7 +12,7 @@ Este repositorio modela ese principio paso a paso, desde un dipolo simple hasta 
 
 ---
 
-## 📁 Estructura
+## Estructura
 
 ```
 Actividades/
@@ -24,7 +24,7 @@ Actividades/
 
 ---
 
-## 📌 Actividades
+## Actividades
 
 ### 1. Dipolo Eléctrico
 Campo vectorial 2D de dos cargas puntuales (+q, −q) usando superposición.
@@ -47,7 +47,7 @@ $$\vec{F}_{DEP} \propto \nabla|\vec{E}|^2$$
 
 ---
 
-## 🚀 Instalación
+## Instalación
 
 ```bash
 git clone https://github.com/tu-usuario/tu-repo.git
@@ -59,7 +59,7 @@ pip install numpy matplotlib
 
 ---
 
-## ▶️ Uso
+## Uso
 
 Correr siempre desde la **raíz del proyecto**:
 
@@ -72,7 +72,7 @@ Los archivos PDF/PNG se guardan automáticamente en la carpeta de cada script.
 
 ---
 
-## 📚 Referencias
+## Referencias
 
 - Pohl, H.A. (1978). *Dielectrophoresis*. Cambridge University Press.
 - Gascoyne, P. et al. — Separación de células infectadas con malaria por dielectroforesis.
@@ -81,7 +81,7 @@ Los archivos PDF/PNG se guardan automáticamente en la carpeta de cada script.
 
 ---
 
-## 👩‍💻 Autores
+## Autores
 
 - Luis Xavier García Pimentel Ascencio
 - Mario Donaciano Castillos Santos
