@@ -61,7 +61,7 @@ for k_i in range(Nq):
 
     # ── Potencial eléctrico V = k*q/rp - k*q/rn ──────────────────────────
     rp2 = np.sqrt((X - xp[k_i])**2 + (Y - yp[k_i])**2)
-    rp2[rp2 < 0.15] = 0.15  # evitar singularidades
+    rp2[rp2 < 0.15] = 0.15  # evitar singularidades/arreglo cuadrado blanco
     rn2 = np.sqrt((X - xn[k_i])**2 + (Y - yn[k_i])**2)
     rn2[rn2 < 0.15] = 0.15  # evitar singularidades
     V += k * q / rp2 - k * q / rn2
