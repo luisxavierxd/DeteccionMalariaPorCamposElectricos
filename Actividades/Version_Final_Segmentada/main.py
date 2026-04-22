@@ -4,7 +4,10 @@ from campoElectrico import calcular_campo
 from trayectorias   import simular, exportar_csv
 from grafico        import graficar
 
-carpeta = os.path.dirname(os.path.abspath(__file__))
+carpeta        = os.path.dirname(os.path.abspath(__file__))
+carpeta_modelo = os.path.normpath(os.path.join(carpeta, '..', 'ModeloIdentificacion'))
+
+NOMBRE_CSV = 'trayectorias_malaria.csv'
 
 
 def main():
@@ -14,8 +17,8 @@ def main():
     print("Simulando trayectorias celulares...")
     trayectorias = simular()
 
-    ruta_csv = os.path.join(carpeta, 'trayectorias_malaria.csv')
-    exportar_csv(trayectorias, ruta_csv)
+    for destino in [carpeta, carpeta_modelo]:
+        exportar_csv(trayectorias, os.path.join(destino, NOMBRE_CSV))
 
     ruta_png = os.path.join(carpeta, 'trayectorias_malaria.png')
     graficar(xx, yy, X, Y, Ex, Ey, V, trayectorias, ruta_png)

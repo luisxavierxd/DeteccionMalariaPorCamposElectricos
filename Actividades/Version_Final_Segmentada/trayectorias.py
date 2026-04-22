@@ -11,14 +11,18 @@ NQ_SIM = 150  # cargas por placa; menos que NQ_VIS para reducir coste computacio
 # ── Propiedades de las células ────────────────────────────────────────────────
 Q_SANA      = 0.8e-6   # carga efectiva célula sana (C)
 Q_INFECTADA = 1.4e-6   # carga efectiva célula infectada (C)
-RUIDO       = 0.3e-6   # dispersión gaussiana entre células de la misma categoría
+RUIDO       = 0.25e-6   # dispersión gaussiana entre células de la misma categoría
 
 # ── Parámetros del integrador ─────────────────────────────────────────────────
-N_PARTICULAS = 30
-DT           = 0.02
-MASA         = 1
-MAX_STEPS    = 2000
-V_INI        = 10
+N_PARTICULAS   = 500
+DT             = 0.02
+MASA           = 1
+MAX_STEPS      = 2000
+V_INI          = 10
+
+# Masa extra exclusiva de células infectadas (unidades adimensionales)
+MASA_EXTRA_MIN = 0.1
+MASA_EXTRA_MAX = 0.9
 
 
 def _posiciones_placa():
@@ -40,14 +44,16 @@ def simular(n_particulas=N_PARTICULAS, semilla=42):
     trayectorias = []
 
     for _ in range(n_particulas):
-        x = np.random.uniform(-0.2, 0.2)
+        x = np.random.uniform(0 ,0)  # posición inicial cerca del centro
         y = 2.5
         vx, vy = 0.0, -V_INI
 
         if np.random.rand() < 0.5:
             q_base, color, tipo = Q_SANA,      'lime', 'Sana'
+            masa_part = MASA
         else:
             q_base, color, tipo = Q_INFECTADA, 'red',  'Infectada'
+            masa_part = MASA + np.random.uniform(MASA_EXTRA_MIN, MASA_EXTRA_MAX)
 
         q_part = max(q_base + np.random.normal(0, RUIDO), 1e-9)
         xs, ys = [x], [y]
@@ -66,8 +72,8 @@ def simular(n_particulas=N_PARTICULAS, semilla=42):
             Fy += np.sum(K_FIS * q_part * -Q_FIS * ryn[mask_n] / rn[mask_n]**3)
 
             # Euler explícito: v → r
-            vx += (Fx / MASA) * DT
-            vy += (Fy / MASA) * DT
+            vx += (Fx / masa_part) * DT
+            vy += (Fy / masa_part) * DT
             x  += vx * DT
             y  += vy * DT
             xs.append(x);  ys.append(y)
@@ -80,6 +86,7 @@ def simular(n_particulas=N_PARTICULAS, semilla=42):
             'ys':    ys,
             'tipo':  tipo,
             'carga': q_part,
+            'masa':  masa_part,
             'color': color,
         })
 
@@ -93,8 +100,8 @@ def exportar_csv(trayectorias, ruta):
     """
     with open(ruta, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['particula_id', 'paso', 'x', 'y', 'tipo', 'carga'])
+        writer.writerow(['particula_id', 'paso', 'x', 'y', 'tipo', 'carga', 'masa'])
         for pid, tray in enumerate(trayectorias):
             for paso, (xi, yi) in enumerate(zip(tray['xs'], tray['ys'])):
-                writer.writerow([pid, paso, xi, yi, tray['tipo'], tray['carga']])
+                writer.writerow([pid, paso, xi, yi, tray['tipo'], tray['carga'], tray['masa']])
     print(f"CSV exportado: {ruta}")
