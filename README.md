@@ -36,11 +36,16 @@ Actividades/
 │   ├── Documentacion_Celulas_Simuladas.md# Documentación detallada
 │   └── trayectorias_malaria.png          # Imagen generada
 │
-└── Version_Final_Segmentada/             # Versión modular (en desarrollo)
-    ├── main.py
-    ├── campoElectrico.py
-    ├── trayectorias.py
-    └── grafico.py
+├── Version_Final_Segmentada/
+│   ├── main.py                           # Punto de entrada
+│   ├── campoElectrico.py
+│   ├── trayectorias.py                   # Genera trayectorias_malaria.csv
+│   └── grafico.py
+│
+└── ModeloIdentificacion/
+    ├── ia.py                             # Clasificador ML (PCA + 4 algoritmos)
+    ├── Documentacion_Modelo_Identificacion.md
+    └── trayectorias_malaria.csv          # CSV generado por Version_Final_Segmentada
 ```
 
 ---
@@ -70,12 +75,17 @@ Integración numérica (Euler explícito) de 30 células bajo la fuerza de Coulo
 - Ruido aleatorio en la carga para mayor realismo
 - Trayectorias superpuestas sobre la visualización del campo de fondo
 
-### 5. Versión Final Segmentada *(en desarrollo)*
-Refactorización del código en módulos independientes para mayor mantenibilidad:
+### 5. Versión Final Segmentada
+Refactorización del código en módulos independientes para mayor mantenibilidad. Además de la imagen PNG, genera `trayectorias_malaria.csv` con las trayectorias detalladas por partícula.
 - `campoElectrico.py` — cálculo del campo y potencial
-- `trayectorias.py` — simulación dinámica de partículas
+- `trayectorias.py` — simulación dinámica de partículas + exportación CSV
 - `grafico.py` — visualización y exportación
 - `main.py` — punto de entrada principal
+
+### 6. Modelo de Identificación — Clasificador ML
+Carga el CSV de trayectorias, extrae 8 características observables por partícula, reduce con PCA a 2 componentes y compara cuatro clasificadores:
+- **Naive Bayes Gaussiano**, **Árbol de Decisión**, **KNN (k=5)**, **Regresión Logística**
+- Genera matrices de confusión individuales (PNG) y un gráfico de barras comparativo de accuracy y recall macro.
 
 ---
 
@@ -86,7 +96,7 @@ git clone https://github.com/luisxavierxd/CamposElectricosMalaria
 cd CamposElectricosMalaria
 python -m venv venv
 venv\Scripts\activate        # Windows
-pip install numpy matplotlib
+pip install numpy matplotlib seaborn scikit-learn pandas
 ```
 
 ---
@@ -100,6 +110,12 @@ python Actividades/Dipolo/Dipolo_Electrico.py
 python Actividades/Placas_Cargadas/Placas_Cargadas.py
 python Actividades/Campos_Malaria/Campos_Malaria.py
 python Actividades/Celulas_Simuladas/Simulacion_Malaria.py
+
+# Versión segmentada (genera PNG + trayectorias_malaria.csv)
+python Actividades/Version_Final_Segmentada/main.py
+
+# Modelo de identificación ML (requiere trayectorias_malaria.csv en ModeloIdentificacion/)
+python Actividades/ModeloIdentificacion/ia.py
 ```
 
 Los archivos PNG se guardan automáticamente en la carpeta de cada script.

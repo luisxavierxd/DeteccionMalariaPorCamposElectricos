@@ -37,7 +37,7 @@ La consola muestra, para cada modelo, la matriz de confusión en texto, precisi�
 ia.py
 │
 ├── Carga del CSV                  # trayectorias_malaria.csv → DataFrame
-├── Ingeniería de características  # 7 features por partícula desde xs, ys
+├── Ingeniería de características  # 8 features por partícula desde xs, ys
 ├── Escalado MinMax                # Normaliza features a [0, 1]
 ├── División train / test          # 80 % / 20 % estratificado
 ├── PCA                            # Reduce a 2 componentes principales (PC1, PC2)
@@ -108,25 +108,25 @@ donde $\mathbf{W}$ contiene los $k$ autovectores principales de la matriz de cov
 
 ### Naive Bayes Gaussiano
 
-Aplica el teorema de Bayes asumiendo que LD1 sigue una distribución normal por clase:
+Aplica el teorema de Bayes asumiendo que cada componente principal sigue una distribución normal por clase:
 
-$$P(clase \mid z) \propto P(clase) \cdot P(z \mid clase)$$
+$$P(clase \mid \mathbf{z}) \propto P(clase) \cdot P(\mathbf{z} \mid clase)$$
 
 ### Árbol de Decisión
 
-Encuentra un umbral sobre LD1 que minimiza la impureza de Gini:
+Encuentra umbrales sobre las componentes principales que minimizan la impureza de Gini:
 
 $$G = 1 - \sum_{c} p_c^2$$
 
 ### KNN (k vecinos más cercanos)
 
-Asigna a cada punto de prueba la clase mayoritaria entre sus $k$ vecinos más cercanos sobre el eje LD1.
+Asigna a cada punto de prueba la clase mayoritaria entre sus $k$ vecinos más cercanos en el espacio PC1–PC2.
 
 ### Regresión Logística
 
-Modela la probabilidad con una sigmoide sobre LD1:
+Modela la probabilidad con una sigmoide sobre la combinación lineal de las componentes principales:
 
-$$P(Infectada \mid z) = \frac{1}{1 + e^{-(wz + b)}}$$
+$$P(Infectada \mid \mathbf{z}) = \frac{1}{1 + e^{-(\mathbf{w}^T\mathbf{z} + b)}}$$
 
 ---
 
@@ -153,7 +153,7 @@ pip install numpy pandas matplotlib seaborn scikit-learn
 | `pandas`       | 1.3+           | Carga de CSV y construcción de features |
 | `matplotlib`   | 3.3+           | Gráfico de barras comparativo |
 | `seaborn`      | 0.11+          | Heatmaps de matrices de confusión |
-| `scikit-learn` | 1.0+           | LDA, escalado, modelos y métricas |
+| `scikit-learn` | 1.0+           | PCA, escalado, modelos y métricas |
 
 ---
 
