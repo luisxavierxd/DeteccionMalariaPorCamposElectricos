@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(C:/Users/LX/Documents/RetoElectricos/CamposElectricosMalaria/venv/Scripts/python.exe *)"
-    ]
-  }
-}
