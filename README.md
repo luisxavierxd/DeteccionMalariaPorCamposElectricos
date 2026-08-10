@@ -1,14 +1,14 @@
-# Visualización de Campos Eléctricos — Detección de Malaria
+# Simulación de Dielectroforesis — Detección de Malaria (modelo físico + ML)
 
-Simulaciones y visualizaciones de campos eléctricos en Python/Matplotlib, desarrolladas como parte de un reto de física aplicada. El objetivo final es modelar el principio de **dielectroforesis** para la detección de malaria en glóbulos rojos infectados.
+Simulaciones y visualizaciones de campos eléctricos en Python/Matplotlib que **modelan** el principio de **dielectroforesis** aplicado a la separación de glóbulos rojos infectados con malaria. Proyecto de física aplicada (Sistemas Eléctricos).
+
+> **Nota importante:** este proyecto es una **simulación y prueba de concepto computacional**, no un sistema de detección clínica real. Modela cómo *se comportarían* células sanas vs. infectadas bajo un campo eléctrico no uniforme, y clasifica sus trayectorias simuladas con machine learning. No procesa muestras biológicas reales.
 
 ---
 
 ## Propósito
 
-Los glóbulos rojos infectados con malaria (*Plasmodium falciparum*) tienen propiedades dieléctricas distintas a los sanos. Al exponerlos a un **campo eléctrico no uniforme**, experimentan fuerzas dielectroforéticas diferentes, lo que permite separarlos y detectar la infección sin métodos invasivos.
-
-Este repositorio modela ese principio paso a paso, desde un dipolo simple hasta la simulación del movimiento de células en un campo generado por electrodos asimétricos.
+Los glóbulos rojos infectados con *Plasmodium falciparum* tienen propiedades dieléctricas distintas a los sanos. Bajo un **campo eléctrico no uniforme**, ambos experimentan fuerzas dielectroforéticas diferentes, lo que en principio permitiría separarlos. Este repositorio modela ese principio paso a paso — de un dipolo simple hasta la simulación del movimiento de células bajo un campo generado por electrodos asimétricos — y luego entrena un clasificador que distingue sanas de infectadas a partir de las trayectorias simuladas.
 
 ---
 
@@ -16,90 +16,36 @@ Este repositorio modela ese principio paso a paso, desde un dipolo simple hasta 
 
 ```
 Actividades/
-├── Dipolo/
-│   ├── Dipolo_Electrico.py               # Campo eléctrico 2D de un dipolo de cargas puntuales
-│   ├── Documentacion_Dipolo.md           # Documentación detallada
-│   └── campo_electrico_dipolo.png        # Imagen generada
-│
-├── Placas_Cargadas/
-│   ├── Placas_Cargadas.py                # Campo 3D de dos placas con distribución discreta de cargas
-│   ├── Documentacion_Placas_Cargadas.md  # Documentación detallada
-│   └── campo_placas_paralelas.png        # Imagen generada
-│
-├── Campos_Malaria/
-│   ├── Campos_Malaria.py                 # Campo no uniforme de placas asimétricas + potencial
-│   ├── Documentacion_Campo_Malaria.md    # Documentación detallada
-│   └── campo_placas_malaria.png          # Imagen generada
-│
-├── Celulas_Simuladas/
-│   ├── Simulacion_Malaria.py             # Trayectorias de células sanas vs infectadas
-│   ├── Documentacion_Celulas_Simuladas.md# Documentación detallada
-│   └── trayectorias_malaria.png          # Imagen generada
-│
-├── Version_Final_Segmentada/
-│   ├── main.py                           # Punto de entrada
-│   ├── campoElectrico.py
-│   ├── trayectorias.py                   # Genera trayectorias_malaria.csv
-│   └── grafico.py
-│
-└── ModeloIdentificacion/
-    ├── ia.py                             # Clasificador ML (PCA + 4 algoritmos)
-    ├── Documentacion_Modelo_Identificacion.md
-    └── trayectorias_malaria.csv          # CSV generado por Version_Final_Segmentada
+├── Dipolo/                     # Campo E 2D de un dipolo de cargas puntuales
+├── Placas_Cargadas/            # Campo 3D de dos placas con distribución discreta de cargas
+├── Campos_Malaria/             # Campo no uniforme de placas asimétricas + potencial
+├── Celulas_Simuladas/          # Trayectorias de células sanas vs. infectadas
+├── Version_Final_Segmentada/   # Refactor modular; genera trayectorias_malaria.csv
+└── ModeloIdentificacion/       # Clasificador ML (PCA + 4 algoritmos) sobre el CSV
 ```
 
 ---
 
 ## Actividades
 
-### 1. Dipolo Eléctrico
-Campo vectorial 2D de dos cargas puntuales (+q, −q) usando superposición.
-- Malla `meshgrid` con `quiver` normalizado
-- Exporta PNG
-
-### 2. Placas Cargadas (campo 3D)
-Arreglo de cargas distribuidas en dos placas paralelas del mismo tamaño (positiva y negativa).
-- Visualización 3D con `Poly3DCollection` (prismas) + `quiver3`
-- Principio de superposición sobre `Nq` cargas por placa
-- Máscara para no dibujar flechas dentro de las placas
-
-### 3. Campo No Uniforme — Configuración para Malaria
-Dos placas asimétricas (larga positiva, corta negativa) generando el gradiente de campo necesario para dielectroforesis.
-- Malla de alta resolución (1000×1000) con `Nq = 500` cargas por placa
-- Mapa de potencial (`contourf`), líneas equipotenciales y líneas de campo (`streamplot`)
-- Exporta PNG sin abrir ventana gráfica (backend `Agg`)
-
-### 4. Simulación de Células — Trayectorias Sanas vs Infectadas
-Integración numérica (Euler explícito) de 30 células bajo la fuerza de Coulomb del campo asimétrico.
-- Células sanas (`q = 0.8e-6 C`) y células infectadas (`q = 1.4e-6 C`)
-- Ruido aleatorio en la carga para mayor realismo
-- Trayectorias superpuestas sobre la visualización del campo de fondo
-
-### 5. Versión Final Segmentada
-Refactorización del código en módulos independientes para mayor mantenibilidad. Además de la imagen PNG, genera `trayectorias_malaria.csv` con las trayectorias detalladas por partícula.
-- `campoElectrico.py` — cálculo del campo y potencial
-- `trayectorias.py` — simulación dinámica de partículas + exportación CSV
-- `grafico.py` — visualización y exportación
-- `main.py` — punto de entrada principal
-
-### 6. Modelo de Identificación — Clasificador ML
-Carga el CSV de trayectorias, extrae 8 características observables por partícula, reduce con PCA a 2 componentes y compara cuatro clasificadores:
-- **Naive Bayes Gaussiano**, **Árbol de Decisión**, **KNN (k=5)**, **Regresión Logística**
-- Genera matrices de confusión individuales (PNG) y un gráfico de barras comparativo de accuracy y recall macro.
+1. **Dipolo eléctrico** — campo vectorial 2D de dos cargas puntuales (+q, −q) por superposición; `meshgrid` + `quiver`.
+2. **Placas cargadas (3D)** — arreglo de cargas en dos placas paralelas; visualización 3D con `Poly3DCollection` + `quiver3` y superposición sobre `Nq` cargas por placa.
+3. **Campo no uniforme (config. malaria)** — dos placas asimétricas (larga positiva, corta negativa) generan el gradiente necesario para dielectroforesis; malla de alta resolución, mapa de potencial (`contourf`), equipotenciales y líneas de campo (`streamplot`).
+4. **Simulación de células** — integración numérica (Euler explícito) de 30 células bajo la fuerza de Coulomb del campo asimétrico; células sanas (`q = 0.8e-6 C`) vs. infectadas (`q = 1.4e-6 C`), con ruido en la carga para realismo.
+5. **Versión final segmentada** — código refactorizado en módulos (`campoElectrico.py`, `trayectorias.py`, `grafico.py`, `main.py`); exporta `trayectorias_malaria.csv`.
+6. **Modelo de identificación (ML)** — carga el CSV, extrae 8 características por partícula, reduce con **PCA** a 2 componentes y compara cuatro clasificadores: **Naive Bayes Gaussiano**, **Árbol de Decisión**, **KNN (k=5)** y **Regresión Logística**. Genera matrices de confusión y un comparativo de accuracy y recall macro.
 
 ---
 
 ## Instalación
 
 ```bash
-git clone https://github.com/luisxavierxd/CamposElectricosMalaria
-cd CamposElectricosMalaria
+git clone https://github.com/luisxavierxd/DeteccionMalariaPorCamposElectricos
+cd DeteccionMalariaPorCamposElectricos
 python -m venv venv
-venv\Scripts\activate        # Windows
+venv\Scripts\activate        # Windows  (macOS/Linux: source venv/bin/activate)
 pip install numpy matplotlib seaborn scikit-learn pandas
 ```
-
----
 
 ## Uso
 
@@ -114,11 +60,11 @@ python Actividades/Celulas_Simuladas/Simulacion_Malaria.py
 # Versión segmentada (genera PNG + trayectorias_malaria.csv)
 python Actividades/Version_Final_Segmentada/main.py
 
-# Modelo de identificación ML (requiere trayectorias_malaria.csv en ModeloIdentificacion/)
+# Modelo ML (requiere trayectorias_malaria.csv en ModeloIdentificacion/)
 python Actividades/ModeloIdentificacion/ia.py
 ```
 
-Los archivos PNG se guardan automáticamente en la carpeta de cada script.
+Los PNG se guardan en la carpeta de cada script.
 
 ---
 
@@ -138,3 +84,7 @@ Los archivos PNG se guardan automáticamente en la carpeta de cada script.
 - Angel Raúl Luna Tirado
 - Fernando Gómez López
 - Camila Ruiz Casas
+
+## Licencia
+
+Distribuido bajo la licencia incluida en el archivo `LICENSE`.
